@@ -18,34 +18,56 @@ public class Character : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        
+        //Si se mira no camina ni mueve la camara con el mouse
+        if (_bodyPartFocused != null)
         {
-            SelectBodyPart();
-        }
-
-
-
-        Vector3 move = Vector3.zero;
-        if (Input.GetKey(KeyCode.W))
-        {
-            move = new Vector3(1f, 0, 0);
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            move = new Vector3(-1f, 0, 0);
-        }
-
-        if (move != Vector3.zero)
-        {
-            transform.position += move.normalized * speed * Time.deltaTime;
-            Vector3 shouldGo = Vector3.zero;
-            if (proceduralPath.UpdatePosition(transform.position, out shouldGo))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
-                transform.position = shouldGo;
+                SelectBodyPart();
             }
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                _bodyPartFocused = null;
+            }
+        } else
+        {
+            Vector3 move = Vector3.zero;
+            if (Input.GetKey(KeyCode.W))
+            {
+                move += transform.forward;
+            }
+            if (Input.GetKey(KeyCode.S))
+            {
+                move += -transform.forward;
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                move += -transform.right;
+            }
+            if (Input.GetKey(KeyCode.D))
+            {
+                move += transform.right;
+            }
+
+            if (move != Vector3.zero)
+            {
+                transform.position += move.normalized * speed * Time.deltaTime;
+                Vector3 shouldGo = Vector3.zero;
+                if (proceduralPath.UpdatePosition(transform.position, out shouldGo))
+                {
+                    transform.position = shouldGo;
+                }
+            }
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                SelectBodyPart();
+            }
+
+            _camera.LookToMouse();
         }
 
-        _camera.LookToMouse();
+        
     }
 
     //Decirle a la cámara que enfoque dicha parte

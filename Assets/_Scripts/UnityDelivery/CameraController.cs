@@ -34,6 +34,7 @@ public class CameraController : MonoBehaviour
             var finalRotation = Quaternion.LookRotation(_bodyPartToFocus.position - transform.position, transform.up);
 
             transform.localRotation = Quaternion.Lerp(transform.localRotation, finalRotation, _rotationSpeed);
+            transform.localRotation = Quaternion.Euler(transform.localRotation.eulerAngles.x, 0f, transform.localRotation.eulerAngles.z);
         }
     }
 
