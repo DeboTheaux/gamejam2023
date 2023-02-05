@@ -17,6 +17,15 @@ public class Fade : MonoBehaviour, IObserver<Dimension>
 
     public void OnNext(Dimension value)
     {
-        if (value is ConsciousDimension) gameObject.SetActive(false);
+        if (value is ConsciousDimension) StartCoroutine(Translate());
+    }
+
+    IEnumerator Translate()
+    {
+        while (transform.position.y >= -20)
+        {
+            transform.Translate(Vector3.down * 2f * Time.deltaTime);
+            yield return null;
+        }        
     }
 }
