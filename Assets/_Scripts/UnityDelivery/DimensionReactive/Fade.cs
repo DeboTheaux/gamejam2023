@@ -24,7 +24,7 @@ public class Fade : MonoBehaviour, IObserver<Dimension>
     {
         while (transform.position.y >= -20)
         {
-            transform.Translate(Vector3.down * 2f * Time.deltaTime);
+            transform.Translate(Vector3.down * 5f * Time.deltaTime);
             yield return null;
         }        
     }
