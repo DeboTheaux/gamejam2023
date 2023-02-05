@@ -1,18 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
-public class Coin : MonoBehaviour
+public class Coin : MonoBehaviour, IObserver<Life>
 {
-    // Start is called before the first frame update
-    void Start()
+    //ganar o perder
+    public void OnCompleted()
     {
-        
+        throw new NotImplementedException();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void OnError(Exception error)
     {
-        
+        throw new NotImplementedException();
+    }
+
+    //reaccionar
+    public void OnNext(Life value)
+    {
+        throw new NotImplementedException();
     }
 }
+

@@ -9,49 +9,33 @@ public class Character : MonoBehaviour
     //Parte del cuerpo que estoy enfocando
     private BodyPart _bodyPartFocused;
 
+    private void Start()
+    {
+        _bodyPartFocused = _bodyParts[0];
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SelectBodyPart();
+        }
+    }
+
     //Decirle a la cámara que enfoque dicha parte
     private void SelectBodyPart()
     {
         //next _bodyParts
         var index = _bodyParts.ToList().IndexOf(_bodyPartFocused);
-        _bodyPartFocused = _bodyParts[index++];
+        var next = ++index % _bodyParts.Length;
+        _bodyPartFocused = _bodyParts[next];
         CameraFocusBodyPart(_bodyPartFocused);
     }
 
     //Decirle a la cámara que enfoque dicha parte
     private void CameraFocusBodyPart(BodyPart bodyPart)
     {
-        _camera.Focus(bodyPart.gameObject);
+        _camera.Focus(bodyPart.transform);
     }
-
-}
-
-public class BodyPart : MonoBehaviour
-{
-    public bool isEnabled;
-}
-
-public class RightHand : BodyPart
-{
-
-}
-
-public class LefttHand : BodyPart
-{
-
-}
-
-public class RightFoot : BodyPart
-{
-
-}
-
-public class LeftFoot : BodyPart
-{
-
-}
-
-public class Chest : BodyPart
-{
 
 }

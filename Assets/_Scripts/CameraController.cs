@@ -5,10 +5,23 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    //Enfocar parte
-    //lerp
-    public void Focus(GameObject gameObject)
+    [SerializeField] private Transform[] _;
+    [SerializeField] private float _rotationSpeed;
+
+    private Transform _bodyPartToFocus;
+
+    private void Update()
     {
-        
+        if(_bodyPartToFocus != null)
+        {
+            var finalRotation = Quaternion.LookRotation(_bodyPartToFocus.position - transform.position, transform.up);
+
+            transform.localRotation = Quaternion.Lerp(transform.localRotation, finalRotation, _rotationSpeed);
+        }
+    }
+
+    public void Focus(Transform bodyPartToFocus)
+    {
+        _bodyPartToFocus = bodyPartToFocus;
     }
 }
