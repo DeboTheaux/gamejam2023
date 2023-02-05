@@ -27,14 +27,15 @@ public class GlobalInstaller : MonoBehaviour
 
     private void Start()
     {
+        _dimensionObservable = new DimensionManager(_dimensions, _dimensionObservers.ToList());
+        _lifeObservable = new LifeManager(_lifeObservers.ToList());
+
         _realityDimension = new(playerActions, _dimensionObservable);
         _consciousDimension = new(_dimensionObservable, _lifeObservable);
 
         _dimensions.Add(_realityDimension);
         _dimensions.Add(_consciousDimension);
 
-        _dimensionObservable = new DimensionManager(_dimensions, _dimensionObservers.ToList());
-        _lifeObservable = new LifeManager(_lifeObservers.ToList());
 
        // _realityDimension.ExecuteAction();
     }
