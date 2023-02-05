@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,8 +9,12 @@ public class Character : MonoBehaviour
     public ProceduralPath proceduralPath;
     public float hitDistance;
     public LayerMask layerMask;
+
     [SerializeField] private BodyPart[] _bodyParts;
     [SerializeField] private CameraController _camera;
+
+    private List<Affect> affects;
+    private float affectSpeed;
     //Parte del cuerpo que estoy enfocando
     private BodyPart _bodyPartFocused;
 
@@ -54,7 +59,7 @@ public class Character : MonoBehaviour
 
             if (move != Vector3.zero)
             {
-                transform.position += move.normalized * speed * Time.deltaTime;
+                transform.position += move.normalized * Mathf.Max(speed - affectSpeed, 0) * Time.deltaTime;
                 Vector3 shouldGo = Vector3.zero;
                 if (proceduralPath.UpdatePosition(transform.position, out shouldGo))
                 {
@@ -95,4 +100,26 @@ public class Character : MonoBehaviour
         _camera.Focus(bodyPart.transform);
     }
 
+    public void AddAffect(Affect affect)
+    {
+        affects.Add(affect);
+        CalculateAffects();
+    }
+
+    public void RemoveAffect(Affect affect)
+    {
+        affects.Remove(affect);
+        CalculateAffects();
+    }
+
+    private void CalculateAffects()
+    {
+        affects.ForEach(affect =>
+        {
+            if (affect.type == Affect.Type.SPEED)
+            {
+                affectSpeed += affect.value;
+            }
+        });
+    }
 }
