@@ -35,6 +35,7 @@ public class Character : MonoBehaviour, IObserver<Dimension>
             if (Input.GetKeyDown(KeyCode.Tab))
             {
                 _bodyPartFocused = null;
+                _camera.Focus(null);
             }
         } else
         {
