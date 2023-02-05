@@ -6,6 +6,8 @@ public class Character : MonoBehaviour
     //Partes del cuerpo
     public float speed;
     public ProceduralPath proceduralPath;
+    public float hitDistance;
+    public LayerMask layerMask;
     [SerializeField] private BodyPart[] _bodyParts;
     [SerializeField] private CameraController _camera;
     //Parte del cuerpo que estoy enfocando
@@ -65,6 +67,13 @@ public class Character : MonoBehaviour
             }
 
             _camera.LookToMouse();
+        }
+
+        RaycastHit hit;
+        Debug.DrawLine(_camera.cam.transform.position, _camera.cam.transform.position + _camera.cam.transform.forward * hitDistance);
+        if(Physics.Raycast(_camera.cam.transform.position, _camera.cam.transform.forward, out hit, hitDistance, layerMask)){
+            //Objeto al que miro
+            Debug.Log(hit.collider.gameObject.name);
         }
 
         
