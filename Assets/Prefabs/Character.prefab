@@ -849,10 +849,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   proceduralPath: {fileID: 0}
-  hitDistance: 0
+  hitDistance: 10
   layerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   _bodyParts:
   - {fileID: 1212474916}
   - {fileID: 298667090}
