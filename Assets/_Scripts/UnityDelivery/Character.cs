@@ -14,12 +14,18 @@ public class Character : MonoBehaviour, IObserver<Dimension>
     [SerializeField] private BodyPart[] _bodyParts;
     [SerializeField] private CameraController _camera;
 
-    private List<Affect> affects;
+    private List<Affect> affects = new List<Affect>();
     private float affectSpeed;
     //Parte del cuerpo que estoy enfocando
     private BodyPart _bodyPartFocused;
 
     private bool reality = true;
+
+    internal bool HasAffect(Affect affect)
+    {
+        return affects.Contains(affect);
+    }
+
     private Dimension _currentDimension;
 
     private void Update()
@@ -127,6 +133,13 @@ public class Character : MonoBehaviour, IObserver<Dimension>
             if (affect.type == Affect.Type.SPEED)
             {
                 affectSpeed += affect.value;
+            }
+            if(affectSpeed != 0)
+            {
+                _bodyParts[0].ChangeState(BodyPart.State.DAMAGED);
+            } else
+            {
+                _bodyParts[0].ChangeState(BodyPart.State.NORMAL);
             }
         });
     }
