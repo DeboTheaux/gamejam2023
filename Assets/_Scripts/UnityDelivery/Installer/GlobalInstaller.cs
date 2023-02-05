@@ -15,7 +15,7 @@ public class GlobalInstaller : MonoBehaviour
     private Observable<Dimension> _dimensionObservable;
     private Observable<Life> _lifeObservable;
 
-    private List<Dimension> _dimensions;
+    private List<Dimension> _dimensions = new();
     private RealityDimension _realityDimension; //
     private ConsciousDimension _consciousDimension; //
 
@@ -27,15 +27,18 @@ public class GlobalInstaller : MonoBehaviour
 
     private void Start()
     {
-        _dimensionObservable = new DimensionManager(_dimensions, _dimensionObservers.ToList());
+        _dimensionObservable = new DimensionManager(_dimensionObservers.ToList());
         _lifeObservable = new LifeManager(_lifeObservers.ToList());
 
-        _realityDimension = new(playerActions, _dimensionObservable);
         _consciousDimension = new(_dimensionObservable, _lifeObservable);
+        _realityDimension = new(playerActions, _dimensionObservable, _consciousDimension);
 
         _dimensions.Add(_realityDimension);
         _dimensions.Add(_consciousDimension);
 
+        _realityDimension.Start();
+
+        _dimensionObservable.TrackDimension(_realityDimension);
 
        // _realityDimension.ExecuteAction();
     }
