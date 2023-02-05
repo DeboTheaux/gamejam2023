@@ -4,6 +4,8 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     //Partes del cuerpo
+    public float speed;
+    public ProceduralPath proceduralPath;
     [SerializeField] private BodyPart[] _bodyParts;
     [SerializeField] private CameraController _camera;
     //Parte del cuerpo que estoy enfocando
@@ -11,7 +13,7 @@ public class Character : MonoBehaviour
 
     private void Start()
     {
-        _bodyPartFocused = _bodyParts[0];
+        //_bodyPartFocused = _bodyParts[0];
     }
 
     private void Update()
@@ -20,6 +22,30 @@ public class Character : MonoBehaviour
         {
             SelectBodyPart();
         }
+
+
+
+        Vector3 move = Vector3.zero;
+        if (Input.GetKey(KeyCode.W))
+        {
+            move = new Vector3(1f, 0, 0);
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            move = new Vector3(-1f, 0, 0);
+        }
+
+        if (move != Vector3.zero)
+        {
+            transform.position += move.normalized * speed * Time.deltaTime;
+            Vector3 shouldGo = Vector3.zero;
+            if (proceduralPath.UpdatePosition(transform.position, out shouldGo))
+            {
+                transform.position = shouldGo;
+            }
+        }
+
+        _camera.LookToMouse();
     }
 
     //Decirle a la cámara que enfoque dicha parte
