@@ -9,11 +9,13 @@ public class RealityDimension : Dimension
     private Queue<PlayerAction> _actionsSequence = new();
 
     private PlayerAction _activePlayerAction;
+    private ConsciousDimension _consciousDimension;
 
-    public RealityDimension(List<PlayerAction> playerActions, Observable<Dimension> dimensionObservable)
+    public RealityDimension(List<PlayerAction> playerActions, Observable<Dimension> dimensionObservable, ConsciousDimension consciousDimension)
     {
         _playerActions = playerActions;
         _dimensionObservable = dimensionObservable;
+        _consciousDimension = consciousDimension;
     }
 
     private void EnqueueActions()
@@ -41,6 +43,12 @@ public class RealityDimension : Dimension
         if (_actionsSequence.Count is 0) return;
 
         var currentAction = _actionsSequence?.Dequeue();
-        currentAction?.Execute(ExecuteAction);
+        currentAction?.Execute(() =>
+        {
+            if (_actionsSequence.Count is not 0)
+                _actionsSequence.Peek().SetActive();
+            else
+                _dimensionObservable.TrackDimension(_consciousDimension);
+        });
     }
 }

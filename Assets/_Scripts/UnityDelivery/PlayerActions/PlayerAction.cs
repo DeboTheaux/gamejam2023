@@ -9,7 +9,7 @@ public class PlayerAction : MonoBehaviour
 
     public virtual void Execute(Action OnComplete)
     {
-        SetInactive();
+        SetActive();
     }
 
     public void SetActive()

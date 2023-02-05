@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Character : MonoBehaviour
+public class Character : MonoBehaviour, IObserver<Dimension>
 {
     //Partes del cuerpo
     public float speed;
@@ -18,10 +19,8 @@ public class Character : MonoBehaviour
     //Parte del cuerpo que estoy enfocando
     private BodyPart _bodyPartFocused;
 
-    private void Start()
-    {
-        //_bodyPartFocused = _bodyParts[0];
-    }
+    private bool reality = true;
+    private Dimension _currentDimension;
 
     private void Update()
     {
@@ -40,6 +39,7 @@ public class Character : MonoBehaviour
         } else
         {
             Vector3 move = Vector3.zero;
+
             if (Input.GetKey(KeyCode.W))
             {
                 move += transform.forward;
@@ -61,9 +61,14 @@ public class Character : MonoBehaviour
             {
                 transform.position += move.normalized * Mathf.Max(speed - affectSpeed, 0) * Time.deltaTime;
                 Vector3 shouldGo = Vector3.zero;
-                if (proceduralPath.UpdatePosition(transform.position, out shouldGo))
+
+                if (!reality)
                 {
-                    transform.position = shouldGo;
+                    if (proceduralPath.UpdatePosition(transform.position, out shouldGo))
+                    {
+                        transform.position = shouldGo;
+                    }
+
                 }
             }
             if (Input.GetKeyDown(KeyCode.Tab))
@@ -78,10 +83,12 @@ public class Character : MonoBehaviour
         Debug.DrawLine(_camera.cam.transform.position, _camera.cam.transform.position + _camera.cam.transform.forward * hitDistance);
         if(Physics.Raycast(_camera.cam.transform.position, _camera.cam.transform.forward, out hit, hitDistance, layerMask)){
             //Objeto al que miro
-            Debug.Log(hit.collider.gameObject.name);
-        }
-
-        
+            if (Input.GetMouseButtonDown(0))
+            {
+                Debug.Log($"click {_currentDimension}");
+                _currentDimension?.ExecuteAction();
+            }
+        }    
     }
 
     //Decirle a la cámara que enfoque dicha parte
@@ -121,5 +128,21 @@ public class Character : MonoBehaviour
                 affectSpeed += affect.value;
             }
         });
+    }
+
+    public void OnCompleted()
+    {
+       
+    }
+
+    public void OnError(Exception error)
+    {
+     
+    }
+
+    public void OnNext(Dimension value)
+    {
+        reality = value is RealityDimension;
+        _currentDimension = value;
     }
 }

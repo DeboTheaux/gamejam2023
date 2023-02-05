@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayAnimation : PlayerAction
@@ -8,7 +9,14 @@ public class PlayAnimation : PlayerAction
 
     public override void Execute(Action OnComplete)
     {
+        SetInactive();
         animator.SetTrigger(animationTrigger);
+        StartCoroutine(Animation(OnComplete));
+    }
+
+    IEnumerator Animation(Action OnComplete)
+    {
+        yield return new WaitForSeconds(1.5f);
         OnComplete();
     }
 }

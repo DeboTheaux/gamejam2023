@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProceduralPath : MonoBehaviour
+public class ProceduralPath : MonoBehaviour, IObserver<Dimension>
 {
     public float scale;
     public float detail;
@@ -15,8 +16,9 @@ public class ProceduralPath : MonoBehaviour
     private GameObject nextRoom;
     private Vector2 currentPosition;
 
+
     // Start is called before the first frame update
-    void Start()
+    public void Initialize()
     {
         prevRoom = Generate(startPosition - new Vector3(size, 0, 0));
         currentRoom = Generate(startPosition);
@@ -24,15 +26,6 @@ public class ProceduralPath : MonoBehaviour
         nextRoom.transform.position = new Vector3(size, 0, 0f);
         currentRoom.transform.position = new Vector3(0, 0, 0f);
         prevRoom.transform.position = new Vector3(-size, 0, 0f);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetButtonDown("Fire1"))
-        {
-            //UpdatePosition(currentPosition + new Vector2(0,.1f));
-        }
     }
 
     public bool UpdatePosition(Vector3 position, out Vector3 shouldGoTo)
@@ -76,5 +69,20 @@ public class ProceduralPath : MonoBehaviour
         return Instantiate(prefabs[Mathf.FloorToInt((float)prefabs.Count * noise)]);
 
         //Translado al jugador atras
+    }
+
+    public void OnCompleted()
+    {
+        
+    }
+
+    public void OnError(Exception error)
+    {
+        
+    }
+
+    public void OnNext(Dimension value)
+    {
+       if(value is ConsciousDimension) Initialize();
     }
 }
