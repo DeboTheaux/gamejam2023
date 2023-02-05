@@ -13,6 +13,9 @@ public class CameraController : MonoBehaviour
     public float sensitivity;
     public Camera cam;
 
+    public Transform originalPosition;
+    public Transform lookPosition;
+
     float rotY = 0f;
     float rotX = 0f;
 
@@ -31,10 +34,30 @@ public class CameraController : MonoBehaviour
     {
         if(_bodyPartToFocus != null)
         {
-            var finalRotation = Quaternion.LookRotation(_bodyPartToFocus.position - transform.position, transform.up);
+            if(Vector3.Distance(cam.transform.localPosition, lookPosition.localPosition) > .1f)
+            {
+                Vector3 position = Vector3.Lerp(cam.transform.localPosition, lookPosition.localPosition, _rotationSpeed);
+                cam.transform.localPosition = position;
 
-            transform.localRotation = Quaternion.Lerp(transform.localRotation, finalRotation, _rotationSpeed);
-            transform.localRotation = Quaternion.Euler(transform.localRotation.eulerAngles.x, 0f, transform.localRotation.eulerAngles.z);
+                Vector3 rotation = Vector3.Lerp(cam.transform.localRotation.eulerAngles, lookPosition.localRotation.eulerAngles, _rotationSpeed);
+                cam.transform.localEulerAngles = new Vector3(rotation.x, rotation.y, 0);
+
+            } else {
+
+                var finalRotation = Quaternion.LookRotation(_bodyPartToFocus.position - transform.position, transform.up);
+
+                Vector3 rotation = Vector3.Lerp(cam.transform.localRotation.eulerAngles, finalRotation.eulerAngles, _rotationSpeed);
+                //cam.transform.localEulerAngles = new Vector3(0, rotation.y, 0);
+                //cam.transform.localEulerAngles = new Vector3(rotation.x, 0, 0);
+            }
+        } else
+        {
+
+            Vector3 position = Vector3.Lerp(cam.transform.localPosition, originalPosition.localPosition, _rotationSpeed);
+            cam.transform.localPosition = position;
+
+            Vector3 rotation = Vector3.Lerp(cam.transform.localRotation.eulerAngles, originalPosition.localRotation.eulerAngles, _rotationSpeed);
+            cam.transform.localEulerAngles = new Vector3(rotation.x, rotation.y, 0);
         }
     }
 
@@ -56,7 +79,6 @@ public class CameraController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            //Mistake happened here vvvv
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
