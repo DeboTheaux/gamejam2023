@@ -16,7 +16,7 @@ public class PlayAnimation : PlayerAction
 
     IEnumerator Animation(Action OnComplete)
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
         OnComplete();
     }
 }
