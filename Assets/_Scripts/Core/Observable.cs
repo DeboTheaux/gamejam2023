@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 public class Observable<T> : IObservable<T>
@@ -60,13 +60,5 @@ public class Observable<T> : IObservable<T>
                 observer.OnCompleted();
 
         _observers.Clear();
-    }
-}
-
-public class DimensionManager : Observable<Dimension>
-{
-    public DimensionManager(List<IObserver<Dimension>> dimensionObservers) : base(dimensionObservers)
-    {
-        
     }
 }

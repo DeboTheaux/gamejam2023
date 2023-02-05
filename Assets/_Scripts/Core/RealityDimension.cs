@@ -1,15 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public class RealityDimension : Dimension
 {
     private List<PlayerAction> _playerActions;
+    private Observable<Dimension> _dimensionObservable;
     private Queue<PlayerAction> _actionsSequence = new();
 
-    public RealityDimension(List<PlayerAction> playerActions)
+    private PlayerAction _activePlayerAction;
+
+    public RealityDimension(List<PlayerAction> playerActions, Observable<Dimension> dimensionObservable)
     {
         _playerActions = playerActions;
-        EnqueueActions();
+        _dimensionObservable = dimensionObservable;
     }
 
     private void EnqueueActions()
@@ -19,7 +23,17 @@ public class RealityDimension : Dimension
         _playerActions.ForEach(action =>
         {
             _actionsSequence.Enqueue(action);
+            action.SetInactive();
         });
+
+        _activePlayerAction = _playerActions[0];
+        _activePlayerAction.SetActive();
+    }
+
+    public void Start()
+    {
+        EnqueueActions();
+        _dimensionObservable.TrackDimension(this);
     }
 
     public void ExecuteAction()
