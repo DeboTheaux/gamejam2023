@@ -1,0 +1,16 @@
+using System;
+using System.Collections.Generic;
+
+public class DimensionManager : Observable<Dimension>
+{
+    private List<Dimension> _dimensions;
+    private Dimension _currentDimension;
+
+    public DimensionManager(List<Dimension> dimensions, List<IObserver<Dimension>> dimensionObservers) : base(dimensionObservers)
+    {
+        _dimensions = dimensions;
+        _currentDimension = _dimensions[0];
+
+        _currentDimension.Start();
+    }
+}
